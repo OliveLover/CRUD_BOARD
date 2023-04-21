@@ -80,7 +80,7 @@ public class PostService {
         String token = jwtUtil.resolveToken(httpServletRequest);
         Claims claims;
 
-        if(token == null) return ResponseDto.set(false, 401, "로그인을 시도 하십시오.");
+        if(token == null) return ResponseDto.set(false, 401, "로그인을 하십시오.");
 
         if(jwtUtil.validateToken(token)) {
             //토큰에서 사용자 정보 가져오기

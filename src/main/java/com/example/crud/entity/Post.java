@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Entity
 @NoArgsConstructor
@@ -26,6 +29,11 @@ public class Post extends Timestamped {
 //   @JoinColumn(name = "member_id")
     private Member member;                                                                               //테이블생성시 자동적으로 member_id라는 필드명을 가진다.
 
+
+    @OneToMany
+    @OrderBy("createdAt DESC")
+    private List<Comment> commentList = new ArrayList<>();
+
     public Post (PostRequestDto postRequestDto, Member member) {
         this.member = member;
         this.name = member.getName();
@@ -36,5 +44,10 @@ public class Post extends Timestamped {
     public void update(PostRequestDto postRequestDto) {
         this.title = postRequestDto.getTitle();
         this.contents = postRequestDto.getContents();
+    }
+
+    public void addComment(Comment comment) {
+        commentList.add(comment);
+        comment.setPost(this);
     }
 }
