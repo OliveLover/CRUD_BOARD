@@ -1,5 +1,6 @@
 package com.example.crud.service;
 
+import com.example.crud.dto.MemberRole;
 import com.example.crud.dto.PostRequestDto;
 import com.example.crud.dto.ResponseDto;
 import com.example.crud.entity.Member;
@@ -71,20 +72,75 @@ public class PostService {
     }
 
     @Transactional
-    public ResponseDto<?> updatePost(Long postId, PostRequestDto postRequestDto) {
+    public ResponseDto<?> updatePost(Long postId, PostRequestDto postRequestDto, HttpServletRequest httpServletRequest) {
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
         );
-        post.update(postRequestDto);
-        return ResponseDto.setSuccess(post);
+
+        String token = jwtUtil.resolveToken(httpServletRequest);
+        Claims claims;
+
+        if(token == null) return ResponseDto.set(false, 401, "로그인을 시도 하십시오.");
+
+        if(jwtUtil.validateToken(token)) {
+            //토큰에서 사용자 정보 가져오기
+            claims = jwtUtil.getUserInfoFromToken(token);
+        } else return ResponseDto.set(false, 403, "잘못된 접근입니다.");
+
+        //토큰에서 가져온 사용자 정보를 DB에서 조회
+        Member member = memberRepository.findByName(claims.getSubject()).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 사용자 입니다.")
+        );
+
+        /************관리자 권한 *********************/
+        if(member.getMemberRole() == MemberRole.ADMIN) {
+            post.update(postRequestDto);
+            return ResponseDto.setSuccess(post);
+        }
+        /*****************************************/
+
+        if(post.getMember().getName().equals(claims.getSubject())) {
+            post.update(postRequestDto);
+            return ResponseDto.setSuccess(post);
+        } else {
+            return ResponseDto.set(false, 403, "잘못된 요청입니다.");
+        }
+
     }
 
     @Transactional
-    public ResponseDto<?> deletePost(Long postId) {
+    public ResponseDto<?> deletePost(Long postId, HttpServletRequest httpServletRequest) {
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
         );
-        postRepository.deleteById(postId);
-        return ResponseDto.setSuccess("해당 게시글을 삭제 하였습니다.");
+
+        String token = jwtUtil.resolveToken(httpServletRequest);
+        Claims claims;
+
+        if(token == null) return ResponseDto.set(false, 401, "로그인을 시도 하십시오.");
+
+        if(jwtUtil.validateToken(token)) {
+            //토큰에서 사용자 정보 가져오기
+            claims = jwtUtil.getUserInfoFromToken(token);
+        } else return ResponseDto.set(false, 403, "잘못된 접근입니다.");
+
+        //토큰에서 가져온 사용자 정보를 DB에서 조회
+        Member member = memberRepository.findByName(claims.getSubject()).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 사용자 입니다.")
+        );
+
+        /************관리자 권한 *********************/
+        if(member.getMemberRole() == MemberRole.ADMIN) {
+            postRepository.deleteById(postId);
+            return ResponseDto.setSuccess(post);
+        }
+        /*****************************************/
+
+        if(post.getMember().getName().equals(claims.getSubject())) {
+            postRepository.deleteById(postId);
+            return ResponseDto.setSuccess("해당 게시글을 삭제 하였습니다.");
+        } else {
+            return ResponseDto.set(false, 403, "잘못된 요청입니다.");
+        }
     }
 }

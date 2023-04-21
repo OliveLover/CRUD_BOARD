@@ -42,13 +42,13 @@ public class PostController {
     }
 
     @PutMapping("post/{postId}")
-    public ResponseDto<?> updatePost(@PathVariable Long postId, @RequestBody PostRequestDto postRequestDto) {
-        return postService.updatePost(postId, postRequestDto);
+    public ResponseDto<?> updatePost(@PathVariable Long postId, @RequestBody PostRequestDto postRequestDto, HttpServletRequest httpServletRequest) {
+        return postService.updatePost(postId, postRequestDto, httpServletRequest);
     }
 
     @DeleteMapping("post/{postId}")
-    public ResponseDto<?> deletePost(@PathVariable Long postId) {
-        return postService.deletePost(postId);
+    public ResponseDto<?> deletePost(@PathVariable Long postId, HttpServletRequest httpServletRequest) {
+        return postService.deletePost(postId, httpServletRequest);
     }
 
 }
