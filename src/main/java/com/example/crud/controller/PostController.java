@@ -26,13 +26,18 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("post")
-    public ResponseDto<PostRequestDto> createPost(@RequestBody PostRequestDto postRequestDto) {
+    public ResponseDto<?> createPost(@RequestBody PostRequestDto postRequestDto) {
         return postService.createPost(postRequestDto);
     }
 
     @GetMapping("posts")
     public ResponseDto<?> getPost() {
         return postService.getPost();
+    }
+
+    @GetMapping("post/{postId}")
+    public ResponseDto<?> getSelectPost(@PathVariable Long postId) {
+        return postService.getSelectPost(postId);
     }
 
 }

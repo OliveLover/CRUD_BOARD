@@ -31,14 +31,21 @@ public class PostService {
      */
 
     @Transactional
-    public ResponseDto<PostRequestDto> createPost(PostRequestDto postRequestDto) {
+    public ResponseDto<?> createPost(PostRequestDto postRequestDto) {
         Post post = new Post(postRequestDto);
         postRepository.save(post);
         return ResponseDto.setSuccess(post);
     }
 
-    public ResponseDto<List> getPost() {
+    public ResponseDto<?> getPost() {
         List<Post> getPost= postRepository.findAllByOrderByCreatedAtDesc();
         return ResponseDto.setSuccess(getPost);
+    }
+
+    public ResponseDto<?> getSelectPost(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new NullPointerException("해당 게시글이 존재하지 않습니다.")
+        );
+        return ResponseDto.setSuccess(post);
     }
 }
