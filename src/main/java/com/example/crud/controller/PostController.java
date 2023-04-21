@@ -34,4 +34,5 @@ public class PostController {
     public ResponseDto<?> getPost() {
         return postService.getPost();
     }
+
 }
