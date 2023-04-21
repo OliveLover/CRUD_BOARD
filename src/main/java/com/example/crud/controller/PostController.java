@@ -40,4 +40,9 @@ public class PostController {
         return postService.getSelectPost(postId);
     }
 
+    @PutMapping("post/{postId}")
+    public ResponseDto<?> updatePost(@PathVariable Long postId, @RequestBody PostRequestDto postRequestDto) {
+        return postService.updatePost(postId, postRequestDto);
+    }
+
 }

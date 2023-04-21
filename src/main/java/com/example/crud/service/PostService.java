@@ -44,8 +44,17 @@ public class PostService {
 
     public ResponseDto<?> getSelectPost(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(
-                () -> new NullPointerException("해당 게시글이 존재하지 않습니다.")
+                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
         );
+        return ResponseDto.setSuccess(post);
+    }
+
+    @Transactional
+    public ResponseDto<?> updatePost(Long postId, PostRequestDto postRequestDto) {
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
+        );
+        post.update(postRequestDto);
         return ResponseDto.setSuccess(post);
     }
 }
