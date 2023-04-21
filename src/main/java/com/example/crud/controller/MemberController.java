@@ -1,9 +1,9 @@
 package com.example.crud.controller;
 
+import com.example.crud.dto.LoginRequestDto;
 import com.example.crud.dto.ResponseDto;
 import com.example.crud.dto.SignUpRequestDto;
 import com.example.crud.service.MemberService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,5 +19,10 @@ public class MemberController {
     @PostMapping("signup")
     public ResponseDto<?> signUp(@RequestBody SignUpRequestDto signUpRequestDto) {
         return memberService.signUp(signUpRequestDto);
+    }
+
+    @PostMapping("login")
+    public ResponseDto<?> login(@RequestBody LoginRequestDto loginRequestDto) {
+        return memberService.login(loginRequestDto);
     }
 }
