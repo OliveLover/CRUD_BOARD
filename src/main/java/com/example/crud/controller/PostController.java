@@ -3,6 +3,7 @@ package com.example.crud.controller;
 import com.example.crud.dto.PostRequestDto;
 import com.example.crud.dto.ResponseDto;
 import com.example.crud.service.PostService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,8 +27,8 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("post")
-    public ResponseDto<?> createPost(@RequestBody PostRequestDto postRequestDto) {
-        return postService.createPost(postRequestDto);
+    public ResponseDto<?> createPost(@RequestBody PostRequestDto postRequestDto, HttpServletRequest httpServletRequest) {
+        return postService.createPost(postRequestDto, httpServletRequest);
     }
 
     @GetMapping("posts")

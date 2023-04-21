@@ -1,5 +1,6 @@
 package com.example.crud.entity;
 
+import com.example.crud.dto.MemberRole;
 import com.example.crud.dto.SignUpRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -33,9 +34,14 @@ public class Member {
     @Column(name ="member_password", nullable = false, length = 50)
     private String password;
 
-    public Member(SignUpRequestDto signUpRequestDto) {
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private MemberRole memberRole;
+
+    public Member(SignUpRequestDto signUpRequestDto, MemberRole memberRole) {
         this.name = signUpRequestDto.getName();
         this.email = signUpRequestDto.getEmail();
         this.password = signUpRequestDto.getPassword();
+        this.memberRole = memberRole;
     }
 }
