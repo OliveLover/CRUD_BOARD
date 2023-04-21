@@ -1,5 +1,6 @@
 package com.example.crud.entity;
 
+import com.example.crud.dto.SignUpRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,9 +27,15 @@ public class Member {
     @Column(name ="member_name", unique = true, length = 30)                         //entity클래스의 컬럼명을 데이터베이스에 매핑, 길이제한
     private String name;
 
-    @Column(name ="member_email", nullable = false, length = 30)
+    @Column(name ="member_email", nullable = false, length = 50)
     private String email;
 
     @Column(name ="member_password", nullable = false, length = 50)
     private String password;
+
+    public Member(SignUpRequestDto signUpRequestDto) {
+        this.name = signUpRequestDto.getName();
+        this.email = signUpRequestDto.getEmail();
+        this.password = signUpRequestDto.getPassword();
+    }
 }
