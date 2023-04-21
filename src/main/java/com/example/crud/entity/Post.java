@@ -1,5 +1,6 @@
 package com.example.crud.entity;
 
+import com.example.crud.dto.PostRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,4 +22,8 @@ public class Post extends Timestamped {
     @ManyToOne                                                                                               //Member 엔티티와 ManyToOne의 관계를 가져 Member엔티이의 pk를 fk로 사용
     private Member member;                                                                               //테이블생성시 자동적으로 member_id라는 필드명을 가진다.
 
+    public Post (PostRequestDto postRequestDto) {
+        this.name = postRequestDto.getName();
+        this.contents = postRequestDto.getContents();
+    }
 }
