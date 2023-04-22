@@ -75,6 +75,13 @@ public class CommentService {
                 () -> new IllegalArgumentException("존재하지 않는 사용자 입니다.")
         );
 
+        /************관리자 권한 *********************/
+        if(member.getMemberRole() == member.getMemberRole().ADMIN) {
+            comment.updateComment(commentRequestDto);
+            return ResponseDto.setSuccess("관리자의 권한으로 수정 되었습니다.");
+        }
+        /*****************************************/
+
         if(comment.getMember() != member) {
             return ResponseDto.set(false, 403, "수정할 권한이 없음");
         }
@@ -103,6 +110,13 @@ public class CommentService {
         Member member = memberRepository.findByName(claims.getSubject()).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 사용자 입니다.")
         );
+
+        /************관리자 권한 *********************/
+        if(member.getMemberRole() == member.getMemberRole().ADMIN) {
+            commentRepository.deleteById(commentId);
+            return ResponseDto.setSuccess("관리자에의해 수정된 게시글입니다.");
+        }
+        /*****************************************/
 
         if(comment.getMember() != member) {
             return ResponseDto.set(false, 403, "삭제할 권한이 없음");
