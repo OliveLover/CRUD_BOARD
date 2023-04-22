@@ -22,4 +22,9 @@ public class CommentController {
     public ResponseDto<?> updateComment(@PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
         return commentService.updateComment(commentId, commentRequestDto, httpServletRequest);
     }
+
+    @DeleteMapping("comment/{commentId}")
+    public ResponseDto<?> deleteComment(@PathVariable Long commentId, HttpServletRequest httpServletRequest) {
+        return commentService.deleteComment(commentId, httpServletRequest);
+    }
 }
