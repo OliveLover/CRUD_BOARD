@@ -24,16 +24,16 @@ public class Comment extends Timestamped {
 
     @JsonIgnore
     @ManyToOne
-    private Member member;
+    private User user;
 
     @JsonIgnore
     @ManyToOne
     private Post post;
 
-    public Comment (CommentRequestDto commentRequestDto, Member member, Post post) {
+    public Comment (CommentRequestDto commentRequestDto, User user, Post post) {
         this.text = commentRequestDto.getText();
-        this.writerName = member.getName();
-        this.member = member;
+        this.writerName = user.getName();
+        this.user = user;
         this.post = post;
     }
 

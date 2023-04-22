@@ -16,7 +16,7 @@ public class Post extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name ="member_name", length = 30)
+    @Column(name ="user_name", length = 30)
     private String name;
 
     @Column(name ="post_title", length = 100)
@@ -26,17 +26,17 @@ public class Post extends Timestamped {
     private String contents;
 
     @ManyToOne                                                                                               //Member 엔티티와 ManyToOne의 관계를 가져 Member엔티이의 pk를 fk로 사용
-   @JoinColumn(name = "member_id")
-    private Member member;                                                                               //테이블생성시 자동적으로 member_id라는 필드명을 가진다.
+   @JoinColumn(name = "user_id")
+    private User user;                                                                               //테이블생성시 자동적으로 member_id라는 필드명을 가진다.
 
 
     @OneToMany(mappedBy = "post")
     @OrderBy("createdAt DESC")
     private List<Comment> commentList = new ArrayList<>();
 
-    public Post (PostRequestDto postRequestDto, Member member) {
-        this.member = member;
-        this.name = member.getName();
+    public Post (PostRequestDto postRequestDto, User user) {
+        this.user = user;
+        this.name = user.getName();
         this.title = postRequestDto.getTitle();
         this.contents = postRequestDto.getContents();
     }

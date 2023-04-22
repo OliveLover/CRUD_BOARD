@@ -2,9 +2,11 @@ package com.example.crud.controller;
 
 import com.example.crud.dto.PostRequestDto;
 import com.example.crud.dto.ResponseDto;
+import com.example.crud.security.UserDetailsImpl;
 import com.example.crud.service.PostService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -27,8 +29,8 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("post")
-    public ResponseDto<?> createPost(@RequestBody PostRequestDto postRequestDto, HttpServletRequest httpServletRequest) {
-        return postService.createPost(postRequestDto, httpServletRequest);
+    public ResponseDto<?> createPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.createPost(postRequestDto, userDetails);
     }
 
     @GetMapping("posts")
@@ -42,13 +44,13 @@ public class PostController {
     }
 
     @PutMapping("post/{postId}")
-    public ResponseDto<?> updatePost(@PathVariable Long postId, @RequestBody PostRequestDto postRequestDto, HttpServletRequest httpServletRequest) {
-        return postService.updatePost(postId, postRequestDto, httpServletRequest);
+    public ResponseDto<?> updatePost(@PathVariable Long postId, @RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.updatePost(postId, postRequestDto, userDetails);
     }
 
     @DeleteMapping("post/{postId}")
-    public ResponseDto<?> deletePost(@PathVariable Long postId, HttpServletRequest httpServletRequest) {
-        return postService.deletePost(postId, httpServletRequest);
+    public ResponseDto<?> deletePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.deletePost(postId, userDetails);
     }
 
 }

@@ -3,8 +3,7 @@ package com.example.crud.controller;
 import com.example.crud.dto.LoginRequestDto;
 import com.example.crud.dto.ResponseDto;
 import com.example.crud.dto.SignUpRequestDto;
-import com.example.crud.service.MemberService;
-import jakarta.servlet.http.HttpServletRequest;
+import com.example.crud.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,16 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/auth")
-public class MemberController {
-    private final MemberService memberService;
+public class UserController {
+    private final UserService userService;
 
     @PostMapping("signup")
     public ResponseDto<?> signUp(@RequestBody SignUpRequestDto signUpRequestDto) {
-        return memberService.signUp(signUpRequestDto);
+        return userService.signUp(signUpRequestDto);
     }
 
     @PostMapping("login")
     public ResponseDto<?> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse httpServletResponse) {
-        return memberService.login(loginRequestDto, httpServletResponse);
+        return userService.login(loginRequestDto, httpServletResponse);
     }
 }
