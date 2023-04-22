@@ -12,6 +12,7 @@ import com.example.crud.repository.MemberRepository;
 import com.example.crud.repository.PostRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,13 +24,14 @@ public class CommentService {
     private final PostRepository postRepository;
     private final JwtUtil jwtUtil;
 
+    @Transactional
     public ResponseDto<?> createComment(Long postId, CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
         String token = jwtUtil.resolveToken(httpServletRequest);
         Claims claims;
 
-        if(token == null) return ResponseDto.set(false, 401, "로그인을 하십시오.");
+        if (token == null) return ResponseDto.set(false, 401, "로그인을 하십시오.");
 
-        if(jwtUtil.validateToken(token)) {
+        if (jwtUtil.validateToken(token)) {
             //토큰에서 사용자 정보 가져오기
             claims = jwtUtil.getUserInfoFromToken(token);
         } else return ResponseDto.set(false, 403, "잘못된 접근입니다.");
@@ -49,6 +51,35 @@ public class CommentService {
         comment.setMember(member);
 
         commentRepository.save(comment);
+        return ResponseDto.setSuccess(comment);
+    }
+
+    @Transactional
+    public ResponseDto<?> updateComment(Long commentId, CommentRequestDto commentRequestDto, HttpServletRequest httpServletRequest) {
+        String token = jwtUtil.resolveToken(httpServletRequest);
+        Claims claims;
+
+        if (token == null) return ResponseDto.set(false, 401, "로그인을 하십시오.");
+
+        if (jwtUtil.validateToken(token)) {
+            //토큰에서 사용자 정보 가져오기
+            claims = jwtUtil.getUserInfoFromToken(token);
+        } else return ResponseDto.set(false, 403, "잘못된 접근입니다.");
+
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 게시물 입니다.")
+        );
+
+        //토큰에서 가져온 사용자 정보를 DB에서 조회
+        Member member = memberRepository.findByName(claims.getSubject()).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 사용자 입니다.")
+        );
+
+        if(comment.getMember() != member) {
+            return ResponseDto.set(false, 403, "수정할 권한이 없음");
+        }
+
+        comment.updateComment(commentRequestDto);
         return ResponseDto.setSuccess(comment);
     }
 }
