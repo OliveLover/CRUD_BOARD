@@ -30,6 +30,16 @@ public class UserService {
         String password = signUpRequestDto.getPassword();
         String adminToken = signUpRequestDto.getAdminToken();
 
+        String namePattern = "^[0-9a-z]{4,10}$";
+        if (!name.matches(namePattern)) {
+            return ResponseDto.set(false, 406, "올바르지 않은 아이디 형식 입니다.");
+        }
+
+        String passwordPattern = "^[a-zA-Z0-9`~!@#$%^&*()\\-_=+\\\\|\\[\\]{};:\'\",.<>/?]{0,9}$";
+        if (!password.matches(passwordPattern)) {
+            return ResponseDto.set(false, 406, "올바르지 않은 비밀번호 형식 입니다.");
+        }
+
         //관리자 토큰의 존재 유무 확인
         if(!adminToken.equals("")) signUpRequestDto.setAdmin(true);
 

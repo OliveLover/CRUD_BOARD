@@ -26,7 +26,7 @@ public class PostService {
 
     /*
     @Transactional
-     - 데이터베이스의 상태를 변경하는 작업 또는 한버에 수행해야하는 연산
+     - 데이터베이스의 상태를 변경하는 작업 또는 한 번에 수행해야하는 연산
      - begin, commit을 자동으로 수행
      - 예외 발생시 rollbackc 처리를 자동으로 수행
 
