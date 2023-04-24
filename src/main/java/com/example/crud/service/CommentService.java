@@ -20,7 +20,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
-    private final JwtUtil jwtUtil;
+    //private final JwtUtil jwtUtil;
 
     @Transactional
     public ResponseDto<?> createComment(Long postId, CommentRequestDto commentRequestDto, UserDetailsImpl userDetails) {
@@ -65,7 +65,7 @@ public class CommentService {
 //        } else return ResponseDto.set(false, 403, "잘못된 접근입니다.");
 
         Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 게시물 입니다.")
+                () -> new IllegalArgumentException("존재하지 않는 댓글 입니다.")
         );
 
         //토큰에서 가져온 사용자 정보를 DB에서 조회
@@ -101,7 +101,7 @@ public class CommentService {
 //        } else return ResponseDto.set(false, 403, "잘못된 접근입니다.");
 
         Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 게시물 입니다.")
+                () -> new IllegalArgumentException("존재하지 않는 댓글 입니다.")
         );
 
         //토큰에서 가져온 사용자 정보를 DB에서 조회

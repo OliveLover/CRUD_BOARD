@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Setter
@@ -21,6 +22,10 @@ public class Comment extends Timestamped {
 
     @Column(name ="comment_writer")
     private String writerName;
+
+    @Column
+    @ColumnDefault("0")
+    private long likesNum;
 
     @JsonIgnore
     @ManyToOne
@@ -39,5 +44,9 @@ public class Comment extends Timestamped {
 
     public void updateComment(CommentRequestDto commentRequestDto) {
         this.text = commentRequestDto.getText();
+    }
+
+    public void cntLike() {
+        this.likesNum += 1;
     }
 }

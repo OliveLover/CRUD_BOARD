@@ -76,7 +76,7 @@ public class UserService {
         );
 
         //비밀번호 확인
-        if(!user.getPassword().equals(password)) {
+        if(!passwordEncoder.matches(password, user.getPassword())) {
             return ResponseDto.set(false, 401, "아이디 또는 비밀번호를 다시 확인해주세요.");
         }
 

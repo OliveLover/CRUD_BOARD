@@ -22,7 +22,7 @@ import java.util.List;
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    private final JwtUtil jwtUtil;
+    //private final JwtUtil jwtUtil;
 
     /*
     @Transactional

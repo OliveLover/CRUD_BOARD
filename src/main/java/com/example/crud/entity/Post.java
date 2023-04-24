@@ -4,6 +4,7 @@ import com.example.crud.dto.PostRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +26,13 @@ public class Post extends Timestamped {
     @Column(name ="post_contents")
     private String contents;
 
-    @ManyToOne                                                                                               //Member 엔티티와 ManyToOne의 관계를 가져 Member엔티이의 pk를 fk로 사용
-   @JoinColumn(name = "user_id")
-    private User user;                                                                               //테이블생성시 자동적으로 member_id라는 필드명을 가진다.
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
+    @Column
+    @ColumnDefault("0")
+    private long likesNum;
 
     @OneToMany(mappedBy = "post")
     @OrderBy("createdAt DESC")
@@ -49,5 +53,9 @@ public class Post extends Timestamped {
     public void addComment(Comment comment) {
         commentList.add(comment);
         comment.setPost(this);
+    }
+
+    public void cntLike() {
+        this.likesNum += 1;
     }
 }
