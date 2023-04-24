@@ -36,6 +36,11 @@ public class LikesService {
 
         Optional<PostLikes> likesCheck = postLikesRepository.findByUserIdAndPostId(userDetails.getUser().getId(), postId);
 
+//test 해봐야할 코드
+//        likesCheck.ifPresent(postLikes ->{postLikes.getPost().deCntLike();
+//        postLikesRepository.delete(likesCheck.get());
+//        });  //null이아니면 뒤에것을 수행
+
         if(likesCheck.isPresent()){
             post.deCntLike();
             postLikesRepository.delete(likesCheck.get());
