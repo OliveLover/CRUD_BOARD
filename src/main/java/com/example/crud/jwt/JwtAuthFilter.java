@@ -1,5 +1,6 @@
 package com.example.crud.jwt;
 
+import com.example.crud.exception.RestApiExceptionHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.example.crud.dto.SecurityExceptionDto;
 import io.jsonwebtoken.Claims;

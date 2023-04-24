@@ -12,6 +12,7 @@ import com.example.crud.security.UserDetailsImpl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +22,7 @@ public class CommentService {
     private final PostRepository postRepository;
 
     @Transactional
+    @ExceptionHandler({IllegalArgumentException.class})
     public ResponseDto<?> createComment(Long postId, CommentRequestDto commentRequestDto, UserDetailsImpl userDetails) {
 
         Post post = postRepository.findById(postId).orElseThrow(
