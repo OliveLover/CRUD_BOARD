@@ -22,7 +22,6 @@ import java.util.List;
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    //private final JwtUtil jwtUtil;
 
     /*
     @Transactional
@@ -78,16 +77,6 @@ public class PostService {
                 () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
         );
 
-//        String token = jwtUtil.resolveToken(httpServletRequest);
-//        Claims claims;
-//
-//        if(token == null) return ResponseDto.set(false, 401, "로그인을 하십시오.");
-//
-//        if(jwtUtil.validateToken(token)) {
-//            //토큰에서 사용자 정보 가져오기
-//            claims = jwtUtil.getUserInfoFromToken(token);
-//        } else return ResponseDto.set(false, 403, "잘못된 접근입니다.");
-
         //토큰에서 가져온 사용자 정보를 DB에서 조회
         User user = userRepository.findByName(userDetails.getUsername()).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 사용자 입니다.")
@@ -114,16 +103,6 @@ public class PostService {
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
         );
-
-//        String token = jwtUtil.resolveToken(httpServletRequest);
-//        Claims claims;
-//
-//        if(token == null) return ResponseDto.set(false, 401, "로그인을 시도 하십시오.");
-//
-//        if(jwtUtil.validateToken(token)) {
-//            //토큰에서 사용자 정보 가져오기
-//            claims = jwtUtil.getUserInfoFromToken(token);
-//        } else return ResponseDto.set(false, 403, "잘못된 접근입니다.");
 
         //토큰에서 가져온 사용자 정보를 DB에서 조회
         User user = userRepository.findByName(userDetails.getUsername()).orElseThrow(

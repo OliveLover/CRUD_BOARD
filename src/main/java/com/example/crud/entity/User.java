@@ -38,13 +38,6 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRole userRole;
 
-//    public User(SignUpRequestDto signUpRequestDto, password, UserRole userRole) {
-//        this.name = signUpRequestDto.getName();
-//        this.email = signUpRequestDto.getEmail();
-//        this.password = password;
-//        this.userRole = userRole;
-//    }
-
     public User(SignUpRequestDto signUpRequestDto, String encode, UserRole userRole) {
         this.name = signUpRequestDto.getName();
         this.email = signUpRequestDto.getEmail();

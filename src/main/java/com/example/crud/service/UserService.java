@@ -58,9 +58,7 @@ public class UserService {
             userRole = UserRole.ADMIN;
         }
 
-        //User user = new User(signUpRequestDto, userRole);
         User user = new User(signUpRequestDto,  passwordEncoder.encode(password) ,userRole);
-        //User user = new User(signUpRequestDto ,userRole);
         userRepository.save(user);
 
         return ResponseDto.setSuccess("회원 가입이 완료 되었습니다.");

@@ -49,4 +49,9 @@ public class Comment extends Timestamped {
     public void cntLike() {
         this.likesNum += 1;
     }
+
+    public void deCntLike(){
+        this.likesNum -= 1;
+    }
+
 }

@@ -4,7 +4,6 @@ import com.example.crud.dto.CommentRequestDto;
 import com.example.crud.dto.ResponseDto;
 import com.example.crud.security.UserDetailsImpl;
 import com.example.crud.service.CommentService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

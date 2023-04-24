@@ -5,7 +5,6 @@ import com.example.crud.dto.ResponseDto;
 import com.example.crud.entity.Comment;
 import com.example.crud.entity.Post;
 import com.example.crud.entity.User;
-import com.example.crud.jwt.JwtUtil;
 import com.example.crud.repository.CommentRepository;
 import com.example.crud.repository.PostRepository;
 import com.example.crud.repository.UserRepository;
@@ -20,19 +19,9 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
-    //private final JwtUtil jwtUtil;
 
     @Transactional
     public ResponseDto<?> createComment(Long postId, CommentRequestDto commentRequestDto, UserDetailsImpl userDetails) {
-//        String token = jwtUtil.resolveToken(httpServletRequest);
-//        Claims claims;
-//
-//        if (token == null) return ResponseDto.set(false, 401, "로그인을 하십시오.");
-//
-//        if (jwtUtil.validateToken(token)) {
-//            //토큰에서 사용자 정보 가져오기
-//            claims = jwtUtil.getUserInfoFromToken(token);
-//        } else return ResponseDto.set(false, 403, "잘못된 접근입니다.");
 
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 게시물 입니다.")
@@ -54,16 +43,6 @@ public class CommentService {
 
     @Transactional
     public ResponseDto<?> updateComment(Long commentId, CommentRequestDto commentRequestDto, UserDetailsImpl userDetails) {
-//        String token = jwtUtil.resolveToken(httpServletRequest);
-//        Claims claims;
-//
-//        if (token == null) return ResponseDto.set(false, 401, "로그인을 하십시오.");
-//
-//        if (jwtUtil.validateToken(token)) {
-//            //토큰에서 사용자 정보 가져오기
-//            claims = jwtUtil.getUserInfoFromToken(token);
-//        } else return ResponseDto.set(false, 403, "잘못된 접근입니다.");
-
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 댓글 입니다.")
         );
@@ -90,16 +69,6 @@ public class CommentService {
 
     @Transactional
     public ResponseDto<?> deleteComment(Long commentId, UserDetailsImpl userDetails) {
-//        String token = jwtUtil.resolveToken(httpServletRequest);
-//        Claims claims;
-//
-//        if (token == null) return ResponseDto.set(false, 401, "로그인을 하십시오.");
-//
-//        if (jwtUtil.validateToken(token)) {
-//            //토큰에서 사용자 정보 가져오기
-//            claims = jwtUtil.getUserInfoFromToken(token);
-//        } else return ResponseDto.set(false, 403, "잘못된 접근입니다.");
-
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 댓글 입니다.")
         );
