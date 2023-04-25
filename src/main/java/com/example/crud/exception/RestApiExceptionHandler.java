@@ -9,6 +9,12 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.nio.file.AccessDeniedException;
 
+/*
+글로벌 예외처리 핸들러
+각각의 에러에 따라
+HttpStatus, ErrorCode, 메시지를 반환한다.
+ */
+
 @RestControllerAdvice
 public class RestApiExceptionHandler {
     @ExceptionHandler(value = {IllegalArgumentException.class})
@@ -31,25 +37,16 @@ public class RestApiExceptionHandler {
         return new ResponseEntity<>(restApiException, HttpStatus.NOT_FOUND);
     }
 
+    //Null 일경우 500 error
     @ExceptionHandler(value = {NullPointerException.class})
     public ResponseEntity<Object> handleNullPointerException(NullPointerException ex) {
         RestApiException restApiException = new RestApiException();
         restApiException.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
         restApiException.setErrorCode("500 error");
-        restApiException.setErrorMessage("서버에러(로그인 상태를 확인하세요.)");
+        restApiException.setErrorMessage("서버에러(로그인상태 또는 아이디 형식이 옳지 않습니다.)");
 
         return new ResponseEntity<>(restApiException, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-//    @ExceptionHandler(value = {HttpClientErrorException.Forbidden.class})
-//    public ResponseEntity<Object> handleForbiddenException(HttpClientErrorException.Forbidden ex) {
-//        RestApiException restApiException = new RestApiException();
-//        restApiException.setHttpStatus(HttpStatus.FORBIDDEN);
-//        restApiException.setErrorCode("403 error");
-//        restApiException.setErrorMessage("서버에서 허락되지 않은 요청입니다.");
-//
-//        return new ResponseEntity<>(restApiException, HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
 
     @ExceptionHandler(value = {AccessDeniedException.class})
     public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) {
@@ -72,6 +69,7 @@ public class RestApiExceptionHandler {
 
     }
 
+    //그이외의 에러 500
     @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<Object> handleException(Exception ex) {
         RestApiException restApiException = new RestApiException();

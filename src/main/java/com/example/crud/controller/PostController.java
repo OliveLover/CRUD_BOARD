@@ -27,26 +27,41 @@ import org.springframework.web.bind.annotation.*;
 public class PostController {
     private final PostService postService;
 
+    /*
+   @Service에서 게시글 작성 메서드 호출
+    */
     @PostMapping("post")
     public ResponseDto<?> createPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.createPost(postRequestDto, userDetails);
     }
 
+    /*
+   @Service에서 게시글 전체 목록 조회 메서드 호출
+    */
     @GetMapping("posts")
     public ResponseDto<?> getPost() {
         return postService.getPost();
     }
 
+    /*
+   @Service에서 지정한 게시글 조회 메서드 호출
+    */
     @GetMapping("post/{postId}")
     public ResponseDto<?> getSelectPost(@PathVariable Long postId) {
         return postService.getSelectPost(postId);
     }
 
+    /*
+  @Service에서 게시글 수정 메서드 호출
+   */
     @PutMapping("post/{postId}")
     public ResponseDto<?> updatePost(@PathVariable Long postId, @RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.updatePost(postId, postRequestDto, userDetails);
     }
 
+    /*
+  @Service에서 게시글 삭제 메서드 호출
+   */
     @DeleteMapping("post/{postId}")
     public ResponseDto<?> deletePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.deletePost(postId, userDetails);

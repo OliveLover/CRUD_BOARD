@@ -8,9 +8,9 @@ import com.example.crud.entity.User;
 import com.example.crud.repository.PostRepository;
 import com.example.crud.repository.UserRepository;
 import com.example.crud.security.UserDetailsImpl;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -34,41 +34,42 @@ public class PostService {
      - 영속성 : 트랜잭션을 성공적으로 마치면 결과가 항상 저장되어야 한다.
      */
 
+    /*
+   게시글 생성 메서드
+    */
     @Transactional
     public ResponseDto<?> createPost(PostRequestDto postRequestDto, UserDetailsImpl userDetails) {
-
-        //토큰에서 가져온 사용자 정보를 DB에서 조회
-        User user = userRepository.findByName(userDetails.getUsername()).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 사용자 입니다.")
-        );
-
+        User user = userCheck(userDetails);
         Post post = new Post(postRequestDto, user);
         postRepository.save(post);
         return ResponseDto.setSuccess("게시글 저장이 완료되었습니다.");
     }
 
+    /*
+   게시글 전체 조회 메서드
+    */
+    @Transactional(readOnly = true)
     public ResponseDto<?> getPost() {
         List<Post> getPost= postRepository.findAllByOrderByCreatedAtDesc();
         return ResponseDto.setSuccess(getPost);
     }
 
+    /*
+   게시글 선택 조회 메서드
+    */
+    @Transactional(readOnly = true)
     public ResponseDto<?> getSelectPost(Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
-        );
+        Post post = postCheck(postId);
         return ResponseDto.setSuccess(post);
     }
 
+    /*
+   게시글 수정 메서드
+    */
     @Transactional
     public ResponseDto<?> updatePost(Long postId, PostRequestDto postRequestDto, UserDetailsImpl userDetails) {
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
-        );
-
-        //토큰에서 가져온 사용자 정보를 DB에서 조회
-        User user = userRepository.findByName(userDetails.getUsername()).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 사용자 입니다.")
-        );
+        Post post = postCheck(postId);
+        User user = userCheck(userDetails);
 
         /************관리자 권한 *********************/
         if(user.getUserRole() == UserRole.ADMIN) {
@@ -86,16 +87,13 @@ public class PostService {
 
     }
 
+    /*
+  게시글 삭제 메서드
+   */
     @Transactional
     public ResponseDto<?> deletePost(Long postId, UserDetailsImpl userDetails) {
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
-        );
-
-        //토큰에서 가져온 사용자 정보를 DB에서 조회
-        User user = userRepository.findByName(userDetails.getUsername()).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 사용자 입니다.")
-        );
+        Post post = postCheck(postId);
+        User user = userCheck(userDetails);
 
         /************관리자 권한 *********************/
         if(user.getUserRole() == UserRole.ADMIN) {
@@ -110,5 +108,24 @@ public class PostService {
         } else {
             return ResponseDto.set(false, 403, "잘못된 요청입니다.");
         }
+    }
+
+    /*
+    게시글 존재 유무 체크
+     */
+    public Post postCheck(Long postId) {
+        return postRepository.findById(postId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 게시물 입니다.")
+        );
+    }
+
+    /*
+    사용자 정보 유무 체크
+     */
+    public User userCheck(UserDetailsImpl userDetails) {
+        //토큰에서 가져온 사용자 정보를 DB에서 조회
+        return userRepository.findByName(userDetails.getUsername()).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 사용자 입니다.")
+        );
     }
 }

@@ -7,11 +7,12 @@ import com.example.crud.dto.SignUpRequestDto;
 import com.example.crud.entity.User;
 import com.example.crud.jwt.JwtUtil;
 import com.example.crud.repository.UserRepository;
+import com.example.crud.security.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -24,7 +25,10 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    @Transactional
+    /*
+   회원가입 메서드
+    */
+    @Transactional(readOnly = true)
     public ResponseDto<?> signUp(SignUpRequestDto signUpRequestDto) {
         String name = signUpRequestDto.getName();
         String password = signUpRequestDto.getPassword();
@@ -64,6 +68,10 @@ public class UserService {
         return ResponseDto.setSuccess("회원 가입이 완료 되었습니다.");
     }
 
+    /*
+   로그인 메서드
+    */
+    @Transactional(readOnly = true)
     public ResponseDto<?> login(LoginRequestDto loginRequestDto, HttpServletResponse httpServletResponse) {
         String name = loginRequestDto.getName();
         String password = loginRequestDto.getPassword();
@@ -81,6 +89,6 @@ public class UserService {
         httpServletResponse.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getName(), user.getUserRole()));
 
         return ResponseDto.setSuccess("로그인 되었습니다.");
-
     }
+
 }

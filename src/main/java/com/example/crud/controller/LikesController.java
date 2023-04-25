@@ -17,7 +17,9 @@ public class LikesController {
 
     private final LikesService likesService;
 
-    //게시글 좋아요
+    /*
+    @Service에서 게시글 좋아요 메서드 호출
+     */
     @PostMapping("like/{postId}")
     public ResponseDto<?> postLikes(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return likesService.postLikes(postId, userDetails);
@@ -25,7 +27,9 @@ public class LikesController {
 
 
 
-    //댓글좋아요
+    /*
+    @Service에서 댓글 좋아요 메서드 호출
+     */
     @PostMapping("like/{postId}/{commentId}")
     public ResponseDto<?> commentLikes(@PathVariable Long postId, @PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return likesService.commentLikes(postId, commentId, userDetails);

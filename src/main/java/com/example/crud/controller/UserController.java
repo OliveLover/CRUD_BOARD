@@ -17,11 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private final UserService userService;
 
+    /*
+  @Service 회원가입 메서드 호출
+   */
     @PostMapping("signup")
     public ResponseDto<?> signUp(@RequestBody SignUpRequestDto signUpRequestDto) {
         return userService.signUp(signUpRequestDto);
     }
 
+    /*
+  @Service 로그인 메서드 호출
+   */
     @PostMapping("login")
     public ResponseDto<?> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse httpServletResponse) {
         return userService.login(loginRequestDto, httpServletResponse);

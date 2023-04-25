@@ -9,9 +9,9 @@ import com.example.crud.repository.CommentRepository;
 import com.example.crud.repository.PostRepository;
 import com.example.crud.repository.UserRepository;
 import com.example.crud.security.UserDetailsImpl;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @Service
@@ -21,18 +21,16 @@ public class CommentService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
+    /*
+    댓글 생성 메서드
+     */
     @Transactional
     @ExceptionHandler({IllegalArgumentException.class})
     public ResponseDto<?> createComment(Long postId, CommentRequestDto commentRequestDto, UserDetailsImpl userDetails) {
 
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 게시물 입니다.")
-        );
+        Post post = postCheck(postId);
 
-        //토큰에서 가져온 사용자 정보를 DB에서 조회
-        User user = userRepository.findByName(userDetails.getUsername()).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 사용자 입니다.")
-        );
+        User user = userCheck(userDetails);
 
         Comment comment = new Comment(commentRequestDto, user, post);
 
@@ -43,16 +41,14 @@ public class CommentService {
         return ResponseDto.setSuccess(comment);
     }
 
+    /*
+    댓글 수정 메서드
+     */
     @Transactional
     public ResponseDto<?> updateComment(Long commentId, CommentRequestDto commentRequestDto, UserDetailsImpl userDetails) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 댓글 입니다.")
-        );
+        Comment comment = commentCheck(commentId);
 
-        //토큰에서 가져온 사용자 정보를 DB에서 조회
-        User user = userRepository.findByName(userDetails.getUsername()).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 사용자 입니다.")
-        );
+        User user = userCheck(userDetails);
 
         /************관리자 권한 *********************/
         if(user.getUserRole() == user.getUserRole().ADMIN) {
@@ -69,16 +65,14 @@ public class CommentService {
         return ResponseDto.setSuccess(comment);
     }
 
+    /*
+    댓글 삭제 메서드
+     */
     @Transactional
     public ResponseDto<?> deleteComment(Long commentId, UserDetailsImpl userDetails) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 댓글 입니다.")
-        );
+        Comment comment = commentCheck(commentId);
 
-        //토큰에서 가져온 사용자 정보를 DB에서 조회
-        User user = userRepository.findByName(userDetails.getUsername()).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 사용자 입니다.")
-        );
+        User user = userCheck(userDetails);
 
         /************관리자 권한 *********************/
         if(user.getUserRole() == user.getUserRole().ADMIN) {
@@ -93,5 +87,33 @@ public class CommentService {
 
         commentRepository.deleteById(commentId);
         return ResponseDto.setSuccess("삭제 되었습니다.");
+    }
+
+    /*
+    댓글 존재 유무 체크
+     */
+    public Comment commentCheck(Long commentId) {
+        return commentRepository.findById(commentId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 댓글 입니다.")
+        );
+    }
+
+    /*
+    게시글 존재 유무 체크
+     */
+    public Post postCheck(Long postId) {
+        return postRepository.findById(postId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 게시물 입니다.")
+        );
+    }
+
+    /*
+    사용자 정보 유무 체크
+     */
+    public User userCheck(UserDetailsImpl userDetails) {
+        //토큰에서 가져온 사용자 정보를 DB에서 조회
+        return userRepository.findByName(userDetails.getUsername()).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 사용자 입니다.")
+        );
     }
 }
