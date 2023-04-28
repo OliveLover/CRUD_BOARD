@@ -28,7 +28,7 @@ public class UserService {
     /*
    회원가입 메서드
     */
-    @Transactional(readOnly = true)
+    @Transactional
     public ResponseDto<?> signUp(SignUpRequestDto signUpRequestDto) {
         String name = signUpRequestDto.getName();
         String password = signUpRequestDto.getPassword();
