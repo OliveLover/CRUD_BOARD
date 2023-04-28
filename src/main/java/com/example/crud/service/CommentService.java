@@ -26,11 +26,11 @@ public class CommentService {
      */
     @Transactional
     @ExceptionHandler({IllegalArgumentException.class})
-    public ResponseDto<?> createComment(Long postId, CommentRequestDto commentRequestDto, UserDetailsImpl userDetails) {
+    public ResponseDto<?> createComment(Long postId, CommentRequestDto commentRequestDto, User user) {
 
         Post post = postCheck(postId);
 
-        User user = userCheck(userDetails);
+        //User user = userCheck(userDetails);
 
         Comment comment = new Comment(commentRequestDto, user, post);
 
@@ -45,10 +45,10 @@ public class CommentService {
     댓글 수정 메서드
      */
     @Transactional
-    public ResponseDto<?> updateComment(Long commentId, CommentRequestDto commentRequestDto, UserDetailsImpl userDetails) {
+    public ResponseDto<?> updateComment(Long commentId, CommentRequestDto commentRequestDto, User user) {
         Comment comment = commentCheck(commentId);
 
-        User user = userCheck(userDetails);
+        //User user = userCheck(userDetails);
 
         /************관리자 권한 *********************/
         if(user.getUserRole() == user.getUserRole().ADMIN) {
@@ -69,10 +69,10 @@ public class CommentService {
     댓글 삭제 메서드
      */
     @Transactional
-    public ResponseDto<?> deleteComment(Long commentId, UserDetailsImpl userDetails) {
+    public ResponseDto<?> deleteComment(Long commentId, User user) {
         Comment comment = commentCheck(commentId);
 
-        User user = userCheck(userDetails);
+        //User user = userCheck(userDetails);
 
         /************관리자 권한 *********************/
         if(user.getUserRole() == user.getUserRole().ADMIN) {
@@ -104,16 +104,6 @@ public class CommentService {
     public Post postCheck(Long postId) {
         return postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 게시물 입니다.")
-        );
-    }
-
-    /*
-    사용자 정보 유무 체크
-     */
-    public User userCheck(UserDetailsImpl userDetails) {
-        //토큰에서 가져온 사용자 정보를 DB에서 조회
-        return userRepository.findByName(userDetails.getUsername()).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 사용자 입니다.")
         );
     }
 }

@@ -1,6 +1,5 @@
 package com.example.crud.entity;
 
-import com.example.crud.security.UserDetailsImpl;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,8 +22,8 @@ public class PostLikes {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    public PostLikes (UserDetailsImpl userDetails, Post post){
-        this.user = userDetails.getUser();
+    public PostLikes (User user, Post post){
+        this.user = user;
         this.post = post;
     }
 

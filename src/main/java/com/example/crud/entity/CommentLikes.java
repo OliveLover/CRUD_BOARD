@@ -1,6 +1,5 @@
 package com.example.crud.entity;
 
-import com.example.crud.security.UserDetailsImpl;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,8 +20,8 @@ public class CommentLikes {
     @JoinColumn(name = "comment_id")
     private Comment comment;
 
-    public CommentLikes (UserDetailsImpl userDetails, Comment comment){
-        this.user = userDetails.getUser();
+    public CommentLikes (User user, Comment comment){
+        this.user = user;
         this.comment = comment;
     }
 }

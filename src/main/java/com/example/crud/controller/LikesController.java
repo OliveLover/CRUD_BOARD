@@ -22,7 +22,7 @@ public class LikesController {
      */
     @PostMapping("like/{postId}")
     public ResponseDto<?> postLikes(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return likesService.postLikes(postId, userDetails);
+        return likesService.postLikes(postId, userDetails.getUser());
     }
 
 
@@ -32,6 +32,6 @@ public class LikesController {
      */
     @PostMapping("like/{postId}/{commentId}")
     public ResponseDto<?> commentLikes(@PathVariable Long postId, @PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return likesService.commentLikes(postId, commentId, userDetails);
+        return likesService.commentLikes(postId, commentId, userDetails.getUser());
     }
 }

@@ -18,7 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor                                                                               //생성자를 자동생성하여 자동주입
 public class PostService {
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
 
     /*
     @Transactional

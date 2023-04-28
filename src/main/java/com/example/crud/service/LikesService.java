@@ -1,10 +1,7 @@
 package com.example.crud.service;
 
 import com.example.crud.dto.ResponseDto;
-import com.example.crud.entity.Comment;
-import com.example.crud.entity.CommentLikes;
-import com.example.crud.entity.PostLikes;
-import com.example.crud.entity.Post;
+import com.example.crud.entity.*;
 import com.example.crud.repository.CommentLikesRepository;
 import com.example.crud.repository.CommentRepository;
 import com.example.crud.repository.PostLikesRepository;
@@ -32,10 +29,10 @@ public class LikesService {
     게시글 좋아요 메서드
      */
     @Transactional
-    public ResponseDto<?> postLikes(Long postId, UserDetailsImpl userDetails) {
+    public ResponseDto<?> postLikes(Long postId, User user) {
         Post post = postCheck(postId);
 
-        Optional<PostLikes> likesCheck = postLikesRepository.findByUserIdAndPostId(userDetails.getUser().getId(), postId);
+        Optional<PostLikes> likesCheck = postLikesRepository.findByUserIdAndPostId(user.getId(), postId);
 
 //test 해봐야할 코드
 //        likesCheck.ifPresent(postLikes ->{postLikes.getPost().deCntLike();
@@ -47,7 +44,7 @@ public class LikesService {
             postLikesRepository.delete(likesCheck.get());
         } else {
             post.cntLike();
-            PostLikes postLikes = new PostLikes(userDetails, post);
+            PostLikes postLikes = new PostLikes(user, post);
             postLikesRepository.save(postLikes);
         }
 
@@ -58,19 +55,19 @@ public class LikesService {
    댓글 좋아요 메서드
     */
     @Transactional
-    public ResponseDto<?> commentLikes(Long postId, Long commentId, UserDetailsImpl userDetails) {
+    public ResponseDto<?> commentLikes(Long postId, Long commentId, User user) {
         Post post = postCheck(postId);
 
         Comment comment = commentCheck(commentId);
 
-        Optional<CommentLikes> likesCheck = commentLikesRepository.findByUserIdAndCommentId(userDetails.getUser().getId(), commentId);
+        Optional<CommentLikes> likesCheck = commentLikesRepository.findByUserIdAndCommentId(user.getId(), commentId);
 
         if(likesCheck.isPresent()){
             comment.deCntLike();
             commentLikesRepository.delete(likesCheck.get());
         } else {
             comment.cntLike();
-            CommentLikes commentLikes = new CommentLikes(userDetails, comment);
+            CommentLikes commentLikes = new CommentLikes(user, comment);
             commentLikesRepository.save(commentLikes);
         }
 
