@@ -32,7 +32,7 @@ public class PostController {
     */
     @PostMapping("post")
     public ResponseDto<?> createPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return postService.createPost(postRequestDto, userDetails);
+        return postService.createPost(postRequestDto, userDetails.getUser());
     }
 
     /*
@@ -56,7 +56,7 @@ public class PostController {
    */
     @PutMapping("post/{postId}")
     public ResponseDto<?> updatePost(@PathVariable Long postId, @RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return postService.updatePost(postId, postRequestDto, userDetails);
+        return postService.updatePost(postId, postRequestDto, userDetails.getUser());
     }
 
     /*
@@ -64,7 +64,7 @@ public class PostController {
    */
     @DeleteMapping("post/{postId}")
     public ResponseDto<?> deletePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return postService.deletePost(postId, userDetails);
+        return postService.deletePost(postId, userDetails.getUser());
     }
 
 }

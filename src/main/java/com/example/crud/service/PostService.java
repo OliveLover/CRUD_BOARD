@@ -38,8 +38,7 @@ public class PostService {
    게시글 생성 메서드
     */
     @Transactional
-    public ResponseDto<?> createPost(PostRequestDto postRequestDto, UserDetailsImpl userDetails) {
-        User user = userCheck(userDetails);
+    public ResponseDto<?> createPost(PostRequestDto postRequestDto, User user) {
         Post post = new Post(postRequestDto, user);
         postRepository.save(post);
         return ResponseDto.setSuccess("게시글 저장이 완료되었습니다.");
@@ -67,9 +66,8 @@ public class PostService {
    게시글 수정 메서드
     */
     @Transactional
-    public ResponseDto<?> updatePost(Long postId, PostRequestDto postRequestDto, UserDetailsImpl userDetails) {
+    public ResponseDto<?> updatePost(Long postId, PostRequestDto postRequestDto, User user) {
         Post post = postCheck(postId);
-        User user = userCheck(userDetails);
 
         /************관리자 권한 *********************/
         if(user.getUserRole() == UserRole.ADMIN) {
@@ -78,7 +76,7 @@ public class PostService {
         }
         /*****************************************/
 
-        if(post.getUser().getName().equals(userDetails.getUsername())) {
+        if(post.getUser().getName().equals(user.getName())) {
             post.update(postRequestDto);
             return ResponseDto.setSuccess("게시글 수정이 완료되었습니다.");
         } else {
@@ -91,9 +89,8 @@ public class PostService {
   게시글 삭제 메서드
    */
     @Transactional
-    public ResponseDto<?> deletePost(Long postId, UserDetailsImpl userDetails) {
+    public ResponseDto<?> deletePost(Long postId, User user) {
         Post post = postCheck(postId);
-        User user = userCheck(userDetails);
 
         /************관리자 권한 *********************/
         if(user.getUserRole() == UserRole.ADMIN) {
@@ -102,7 +99,7 @@ public class PostService {
         }
         /*****************************************/
 
-        if(post.getUser().getName().equals(userDetails.getUsername())) {
+        if(post.getUser().getName().equals(user.getName())) {
             postRepository.deleteById(postId);
             return ResponseDto.setSuccess("해당 게시글을 삭제 하였습니다.");
         } else {
@@ -116,16 +113,6 @@ public class PostService {
     public Post postCheck(Long postId) {
         return postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 게시물 입니다.")
-        );
-    }
-
-    /*
-    사용자 정보 유무 체크
-     */
-    public User userCheck(UserDetailsImpl userDetails) {
-        //토큰에서 가져온 사용자 정보를 DB에서 조회
-        return userRepository.findByName(userDetails.getUsername()).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 사용자 입니다.")
         );
     }
 }
