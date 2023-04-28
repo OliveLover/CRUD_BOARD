@@ -6,7 +6,6 @@ import com.example.crud.repository.CommentLikesRepository;
 import com.example.crud.repository.CommentRepository;
 import com.example.crud.repository.PostLikesRepository;
 import com.example.crud.repository.PostRepository;
-import com.example.crud.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,15 +39,16 @@ public class LikesService {
 //        });  //null이아니면 뒤에것을 수행
 
         if(likesCheck.isPresent()){
-            post.deCntLike();
             postLikesRepository.delete(likesCheck.get());
         } else {
-            post.cntLike();
             PostLikes postLikes = new PostLikes(user, post);
+
             postLikesRepository.save(postLikes);
         }
 
-        return ResponseDto.setSuccess(post.getLikesNum());
+        long likes = postLikesRepository.countByPostId(postId);
+        post.checkLikes(likes);
+        return ResponseDto.setSuccess(likes);
     }
 
     /*
@@ -63,15 +63,17 @@ public class LikesService {
         Optional<CommentLikes> likesCheck = commentLikesRepository.findByUserIdAndCommentId(user.getId(), commentId);
 
         if(likesCheck.isPresent()){
-            comment.deCntLike();
             commentLikesRepository.delete(likesCheck.get());
         } else {
-            comment.cntLike();
             CommentLikes commentLikes = new CommentLikes(user, comment);
             commentLikesRepository.save(commentLikes);
         }
 
-        return ResponseDto.setSuccess(comment.getLikesNum());
+        long likes = commentLikesRepository.countByCommentId(commentId);
+
+        comment.checkLikes(likes);
+
+        return ResponseDto.setSuccess(likes);
     }
 
     /*

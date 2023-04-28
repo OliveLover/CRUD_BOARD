@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface PostLikesRepository extends JpaRepository<PostLikes, Long> {
     Optional<PostLikes> findByUserIdAndPostId(Long userId, Long postId);
+
+    Long countByPostId(Long postId);
 }

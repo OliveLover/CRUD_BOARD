@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
-    private final UserRepository userRepository;
     private final PostRepository postRepository;
 
     /*
@@ -29,8 +28,6 @@ public class CommentService {
     public ResponseDto<?> createComment(Long postId, CommentRequestDto commentRequestDto, User user) {
 
         Post post = postCheck(postId);
-
-        //User user = userCheck(userDetails);
 
         Comment comment = new Comment(commentRequestDto, user, post);
 
@@ -47,8 +44,6 @@ public class CommentService {
     @Transactional
     public ResponseDto<?> updateComment(Long commentId, CommentRequestDto commentRequestDto, User user) {
         Comment comment = commentCheck(commentId);
-
-        //User user = userCheck(userDetails);
 
         /************관리자 권한 *********************/
         if(user.getUserRole() == user.getUserRole().ADMIN) {
@@ -71,8 +66,6 @@ public class CommentService {
     @Transactional
     public ResponseDto<?> deleteComment(Long commentId, User user) {
         Comment comment = commentCheck(commentId);
-
-        //User user = userCheck(userDetails);
 
         /************관리자 권한 *********************/
         if(user.getUserRole() == user.getUserRole().ADMIN) {

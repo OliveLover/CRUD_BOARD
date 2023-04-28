@@ -46,12 +46,8 @@ public class Comment extends Timestamped {
         this.text = commentRequestDto.getText();
     }
 
-    public void cntLike() {
-        this.likesNum += 1;
-    }
-
-    public void deCntLike(){
-        this.likesNum -= 1;
+    public void checkLikes(long likes){
+        this.likesNum = likes;
     }
 
 }
