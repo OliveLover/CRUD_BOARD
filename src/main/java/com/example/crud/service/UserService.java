@@ -1,13 +1,11 @@
 package com.example.crud.service;
 
-import com.example.crud.dto.LoginRequestDto;
-import com.example.crud.dto.UserRole;
-import com.example.crud.dto.ResponseDto;
-import com.example.crud.dto.SignUpRequestDto;
+import com.example.crud.dto.*;
+import com.example.crud.entity.RefreshToken;
 import com.example.crud.entity.User;
 import com.example.crud.jwt.JwtUtil;
+import com.example.crud.repository.RefreshTokenRepository;
 import com.example.crud.repository.UserRepository;
-import com.example.crud.security.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +22,8 @@ public class UserService {
     private  final JwtUtil jwtUtil;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final RefreshTokenRepository refreshTokenRepository;
 
     /*
    회원가입 메서드
@@ -71,7 +71,7 @@ public class UserService {
     /*
    로그인 메서드
     */
-    @Transactional(readOnly = true)
+    @Transactional
     public ResponseDto<?> login(LoginRequestDto loginRequestDto, HttpServletResponse httpServletResponse) {
         String name = loginRequestDto.getName();
         String password = loginRequestDto.getPassword();
@@ -86,9 +86,31 @@ public class UserService {
             return ResponseDto.set(false, 401, "아이디 또는 비밀번호를 다시 확인해주세요.");
         }
 
-        httpServletResponse.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getName(), user.getUserRole()));
+        //아이디 정보로 Token 생성
+        TokenDto tokenDto = jwtUtil.createAllToken(loginRequestDto.getName());
 
+        //Refresh Token 이 있는지 확인
+        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUsername(loginRequestDto.getName());
+
+        /*
+        Refresh Token이 있다면 발급 후 업데이트
+        Refresh Token이 없다면 새로 생성한 후 DB에 저장
+         */
+        if(refreshToken.isPresent()) {
+            refreshTokenRepository.save(refreshToken.get().updateToken(tokenDto.getRefreshToken()));
+        } else {
+            RefreshToken newToken = new RefreshToken(tokenDto.getRefreshToken(), loginRequestDto.getName());
+            refreshTokenRepository.save(newToken);
+        }
+
+        //httpServletResponse.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getName(), user.getUserRole()));
+        setHeader(httpServletResponse, tokenDto);
         return ResponseDto.setSuccess("로그인 되었습니다.");
+    }
+
+    public void setHeader(HttpServletResponse httpServletResponse, TokenDto tokenDto) {
+        httpServletResponse.addHeader(JwtUtil.ACCESS_TOKEN, tokenDto.getAccessToken());
+        httpServletResponse.addHeader(JwtUtil.REFRESH_TOKEN, tokenDto.getRefreshToken());
     }
 
 }

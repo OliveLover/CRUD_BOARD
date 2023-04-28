@@ -7,8 +7,6 @@ import com.example.crud.entity.Post;
 import com.example.crud.entity.User;
 import com.example.crud.repository.CommentRepository;
 import com.example.crud.repository.PostRepository;
-import com.example.crud.repository.UserRepository;
-import com.example.crud.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
