@@ -54,13 +54,6 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    //header에서 토큰을 가져오기
-//    public String getHeaderToken(HttpServletRequest httpServletRequest, String tokenType) {
-//        System.out.println("httpServletRequest = " + httpServletRequest);
-//        System.out.println("tokenType = " + tokenType);
-//        return tokenType.equals("Access") ? httpServletRequest.getHeader(ACCESS_TOKEN) : httpServletRequest.getHeader(REFRESH_TOKEN);
-//    }
-
      //header 토큰을 가져오기
     public String resolveToken(HttpServletRequest request, String tokenType) {
         String token = tokenType.equals("Access_Token") ? ACCESS_TOKEN : REFRESH_TOKEN;

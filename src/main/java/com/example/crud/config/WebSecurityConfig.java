@@ -33,6 +33,20 @@ public class WebSecurityConfig {
 
     private final JwtUtil jwtUtil;
 
+    private static final String[] PERMIT_URL_ARRAY = {
+            /* swagger v2 */
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            /* swagger v3 */
+            "/v3/api-docs/**",
+            "/swagger-ui/**"
+    };
+
     @Bean
     public PasswordEncoder passwordEncoder() {                                              //Spring Security에서 암호 인코더 빈을 생성
         return new BCryptPasswordEncoder();
@@ -53,7 +67,12 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
-        http.csrf().disable();
+        http.csrf().disable()
+                .authorizeHttpRequests()
+                .requestMatchers(PERMIT_URL_ARRAY).permitAll()
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/posts").permitAll()
+                .anyRequest().authenticated().and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         /*
         기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한설정
@@ -71,9 +90,9 @@ public class WebSecurityConfig {
         이용하여 인증된 사용자인지를 판단.
          */
 
-        http.authorizeHttpRequests().requestMatchers("api/auth/**").permitAll()
-                .requestMatchers("api/posts").permitAll()
-                .anyRequest().authenticated().and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+//        http.authorizeHttpRequests().requestMatchers("api/auth/**").permitAll()
+//                .requestMatchers("api/posts").permitAll()
+//                .anyRequest().authenticated().and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

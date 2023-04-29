@@ -29,16 +29,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String accessToken = jwtUtil.resolveToken(request, JwtUtil.ACCESS_TOKEN);
         String refreshToken = jwtUtil.resolveToken(request, JwtUtil.REFRESH_TOKEN);
 
-        System.out.println("accessToken = " + accessToken);
-        System.out.println("1refreshToken = " + refreshToken);
-
         if (accessToken != null) {
-            System.out.println("accessToken의 null 정보 : " + accessToken != null);
             //Access Token이 유효하면 setAuthentication을 통해 Security context에 인증정보 저장
             if (jwtUtil.validateToken(accessToken)) {
-                System.out.println("jwtUtil.validateToken(accessToken) = " + jwtUtil.validateToken(accessToken));
                 setAuthentication(jwtUtil.getUserInfoFromToken(accessToken));
-                System.out.println("2refreshToken = " + refreshToken);
             } else if (refreshToken != null) {
                 boolean isRefreshToken = jwtUtil.refreshTokenValidation(refreshToken);
                 //리프레시 토큰이 유효하고 리프레시 토큰이 DB와 비교했을 때 똑같다면
@@ -47,7 +41,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     String loginId = jwtUtil.getUserInfoFromToken(refreshToken);
                     //새로운 Access Token 발급
                     String newAccessToken = jwtUtil.createToken(loginId, "Access");
-                    System.out.println("newAccessToken = " + newAccessToken);
                     //헤더에 Access Token 추가
                     jwtUtil.setHeaderAccessToken(response, newAccessToken);
                     //Security context에 인증정보 넣기
