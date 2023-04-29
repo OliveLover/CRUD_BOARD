@@ -32,61 +32,40 @@ import org.springframework.web.bind.annotation.*;
 public class PostController {
     private final PostService postService;
 
-    /*
-   @Service에서 게시글 작성 메서드 호출
-    */
     @Operation(summary = "게시글 생성 API", description = "게시글을 생성")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "게시글 저장 완료")
-    })
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "게시글 저장 완료")})
     @PostMapping("post")
     public ResponseDto<?> createPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.createPost(postRequestDto, userDetails.getUser());
     }
 
-    /*
-   @Service에서 게시글 전체 목록 조회 메서드 호출
-    */
     @Operation(summary = "전체 게시글 조회 API", description = "전체 게시글 조회")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "전체 게시글 목록 출력")
-    })
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "전체 게시글 목록 출력")})
     @GetMapping("posts")
-    public ResponseDto<?> getPost() {
-        return postService.getPost();
+    public ResponseDto<?> getPost(
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("isAsc") boolean isAsc) {
+        return postService.getPost(page-1, size, sortBy, isAsc);
     }
 
-    /*
-   @Service에서 지정한 게시글 조회 메서드 호출
-    */
     @Operation(summary = "선택한 게시글 조회 API", description = "선택한 게시글 조회")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "선택한 게시글을 출력")
-    })
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "선택한 게시글을 출력")})
     @GetMapping("post/{postId}")
     public ResponseDto<?> getSelectPost(@PathVariable Long postId) {
         return postService.getSelectPost(postId);
     }
 
-    /*
-  @Service에서 게시글 수정 메서드 호출
-   */
     @Operation(summary = "선택한 게시글 수정 API", description = "선택한 게시글 수정")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "선택한 게시글을 수정")
-    })
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "선택한 게시글을 수정")})
     @PutMapping("post/{postId}")
     public ResponseDto<?> updatePost(@PathVariable Long postId, @RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.updatePost(postId, postRequestDto, userDetails.getUser());
     }
 
-    /*
-  @Service에서 게시글 삭제 메서드 호출
-   */
     @Operation(summary = "선택한 게시글 삭제 API", description = "선택한 게시글 삭제")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "선택한 게시글을 삭제")
-    })
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "선택한 게시글을 삭제")})
     @DeleteMapping("post/{postId}")
     public ResponseDto<?> deletePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.deletePost(postId, userDetails.getUser());

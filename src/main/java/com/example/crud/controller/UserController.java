@@ -18,29 +18,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/auth")
-@Tag(name = "UserController", description = " Controller")
+@Tag(name = "UserController", description = "유저 Controller")
 public class UserController {
     private final UserService userService;
 
-    /*
-  @Service 회원가입 메서드 호출
-   */
     @Operation(summary = "회원가입 API", description = "회원가입")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "회원 가입 완료")
-    })
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "회원 가입 완료")})
     @PostMapping("signup")
     public ResponseDto<?> signUp(@RequestBody SignUpRequestDto signUpRequestDto) {
         return userService.signUp(signUpRequestDto);
     }
 
-    /*
-  @Service 로그인 메서드 호출
-   */
     @Operation(summary = "로그인 API", description = "로그인, RefreshToken, AccessToken")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "회원 가입 완료")
-    })
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "회원 가입 완료")})
     @PostMapping("login")
     public ResponseDto<?> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse httpServletResponse) {
         return userService.login(loginRequestDto, httpServletResponse);

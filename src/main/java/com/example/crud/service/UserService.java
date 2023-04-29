@@ -25,9 +25,6 @@ public class UserService {
 
     private final RefreshTokenRepository refreshTokenRepository;
 
-    /*
-   회원가입 메서드
-    */
     @Transactional
     public ResponseDto<?> signUp(SignUpRequestDto signUpRequestDto) {
         String name = signUpRequestDto.getName();
@@ -68,9 +65,6 @@ public class UserService {
         return ResponseDto.setSuccess("회원 가입이 완료 되었습니다.");
     }
 
-    /*
-   로그인 메서드
-    */
     @Transactional
     public ResponseDto<?> login(LoginRequestDto loginRequestDto, HttpServletResponse httpServletResponse) {
         String name = loginRequestDto.getName();

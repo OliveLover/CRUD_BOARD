@@ -7,10 +7,12 @@ import com.example.crud.entity.Post;
 import com.example.crud.entity.User;
 import com.example.crud.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor                                                                               //생성자를 자동생성하여 자동주입
@@ -31,9 +33,6 @@ public class PostService {
      - 영속성 : 트랜잭션을 성공적으로 마치면 결과가 항상 저장되어야 한다.
      */
 
-    /*
-   게시글 생성 메서드
-    */
     @Transactional
     public ResponseDto<?> createPost(PostRequestDto postRequestDto, User user) {
         Post post = new Post(postRequestDto, user);
@@ -41,27 +40,22 @@ public class PostService {
         return ResponseDto.setSuccess("게시글 저장이 완료되었습니다.");
     }
 
-    /*
-   게시글 전체 조회 메서드
-    */
     @Transactional(readOnly = true)
-    public ResponseDto<?> getPost() {
-        List<Post> getPost= postRepository.findAllByOrderByCreatedAtDesc();
-        return ResponseDto.setSuccess(getPost);
+    public ResponseDto<?> getPost(int page, int size, String sortBy, boolean isAsc) {
+        //페이징 처리
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Post> postPage = postRepository.findAll(pageable);
+        return ResponseDto.setSuccess(postPage);
     }
 
-    /*
-   게시글 선택 조회 메서드
-    */
     @Transactional(readOnly = true)
     public ResponseDto<?> getSelectPost(Long postId) {
         Post post = postCheck(postId);
         return ResponseDto.setSuccess(post);
     }
 
-    /*
-   게시글 수정 메서드
-    */
     @Transactional
     public ResponseDto<?> updatePost(Long postId, PostRequestDto postRequestDto, User user) {
         Post post = postCheck(postId);
@@ -82,9 +76,6 @@ public class PostService {
 
     }
 
-    /*
-  게시글 삭제 메서드
-   */
     @Transactional
     public ResponseDto<?> deletePost(Long postId, User user) {
         Post post = postCheck(postId);
@@ -104,9 +95,6 @@ public class PostService {
         }
     }
 
-    /*
-    게시글 존재 유무 체크
-     */
     public Post postCheck(Long postId) {
         return postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 게시물 입니다.")

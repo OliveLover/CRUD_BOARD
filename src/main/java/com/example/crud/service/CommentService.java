@@ -18,9 +18,6 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
 
-    /*
-    댓글 생성 메서드
-     */
     @Transactional
     @ExceptionHandler({IllegalArgumentException.class})
     public ResponseDto<?> createComment(Long postId, CommentRequestDto commentRequestDto, User user) {
@@ -36,9 +33,6 @@ public class CommentService {
         return ResponseDto.setSuccess(comment);
     }
 
-    /*
-    댓글 수정 메서드
-     */
     @Transactional
     public ResponseDto<?> updateComment(Long commentId, CommentRequestDto commentRequestDto, User user) {
         Comment comment = commentCheck(commentId);
@@ -58,9 +52,6 @@ public class CommentService {
         return ResponseDto.setSuccess(comment);
     }
 
-    /*
-    댓글 삭제 메서드
-     */
     @Transactional
     public ResponseDto<?> deleteComment(Long commentId, User user) {
         Comment comment = commentCheck(commentId);
@@ -80,18 +71,12 @@ public class CommentService {
         return ResponseDto.setSuccess("삭제 되었습니다.");
     }
 
-    /*
-    댓글 존재 유무 체크
-     */
     public Comment commentCheck(Long commentId) {
         return commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 댓글 입니다.")
         );
     }
 
-    /*
-    게시글 존재 유무 체크
-     */
     public Post postCheck(Long postId) {
         return postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 게시물 입니다.")

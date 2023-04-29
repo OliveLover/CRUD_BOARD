@@ -24,9 +24,6 @@ public class LikesService {
 
     private final CommentLikesRepository commentLikesRepository;
 
-    /*
-    게시글 좋아요 메서드
-     */
     @Transactional
     public ResponseDto<?> postLikes(Long postId, User user) {
         Post post = postCheck(postId);
@@ -51,9 +48,6 @@ public class LikesService {
         return ResponseDto.setSuccess(likes);
     }
 
-    /*
-   댓글 좋아요 메서드
-    */
     @Transactional
     public ResponseDto<?> commentLikes(Long postId, Long commentId, User user) {
         Post post = postCheck(postId);
@@ -76,18 +70,12 @@ public class LikesService {
         return ResponseDto.setSuccess(likes);
     }
 
-    /*
-    댓글 존재 유무 체크
-     */
     public Comment commentCheck(Long commentId) {
         return commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 댓글 입니다.")
         );
     }
 
-    /*
-    게시글 존재 유무 체크
-     */
     public Post postCheck(Long postId) {
         return postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 게시물 입니다.")
