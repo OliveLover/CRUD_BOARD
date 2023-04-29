@@ -90,10 +90,6 @@ public class WebSecurityConfig {
         이용하여 인증된 사용자인지를 판단.
          */
 
-//        http.authorizeHttpRequests().requestMatchers("api/auth/**").permitAll()
-//                .requestMatchers("api/posts").permitAll()
-//                .anyRequest().authenticated().and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 }
