@@ -3,6 +3,7 @@ package com.example.crud.controller;
 import com.example.crud.dto.LoginRequestDto;
 import com.example.crud.dto.ResponseDto;
 import com.example.crud.dto.SignUpRequestDto;
+import com.example.crud.security.UserDetailsImpl;
 import com.example.crud.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,5 +36,19 @@ public class UserController {
     @PostMapping("login")
     public ResponseDto<?> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse httpServletResponse) {
         return userService.login(loginRequestDto, httpServletResponse);
+    }
+
+    @Operation(summary = "로그아웃 API", description = "로그아웃")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "회원 가입 완료")})
+    @PostMapping("logout")
+    public ResponseDto<?> logout(@AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletResponse httpServletResponse) {
+        return userService.logout(userDetails.getUser(), httpServletResponse);
+    }
+
+    @Operation(summary = "회원 탈퇴 API", description = "회원탈퇴")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "회원 탈퇴 완료")})
+    @PostMapping("signOut")
+    public ResponseDto<?> signOut(LoginRequestDto loginRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return userService.signOut(loginRequestDto, userDetails.getUser());
     }
 }
