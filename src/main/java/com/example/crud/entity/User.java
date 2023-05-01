@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter                                                                                                            //getter 자동 생성
 @Entity(name ="users")                                                                                     //JPA에서 해당 클래스를 Entity로 추적하여 관리
 @NoArgsConstructor                                                                                         //기본생성자 자동생성
@@ -37,6 +39,10 @@ public class User {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRole userRole;
+
+    @OneToMany(mappedBy= "user", cascade = CascadeType.ALL)
+    private List<Post> post;
+
 
     public User(SignUpRequestDto signUpRequestDto, String encode, UserRole userRole) {
         this.name = signUpRequestDto.getName();

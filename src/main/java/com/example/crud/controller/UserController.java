@@ -47,8 +47,8 @@ public class UserController {
 
     @Operation(summary = "회원 탈퇴 API", description = "회원탈퇴")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "회원 탈퇴 완료")})
-    @PostMapping("signOut")
-    public ResponseDto<?> signOut(LoginRequestDto loginRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return userService.signOut(loginRequestDto, userDetails.getUser());
+    @PostMapping("signout")
+    public ResponseDto<?> signOut(@RequestBody LoginRequestDto loginRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletResponse httpServletResponse) {
+        return userService.signOut(loginRequestDto, userDetails.getUser(), httpServletResponse);
     }
 }

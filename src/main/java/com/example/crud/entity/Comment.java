@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -34,6 +37,9 @@ public class Comment extends Timestamped {
     @JsonIgnore
     @ManyToOne
     private Post post;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<CommentLikes> commentLikesList = new ArrayList<>();
 
     public Comment (CommentRequestDto commentRequestDto, User user, Post post) {
         this.text = commentRequestDto.getText();

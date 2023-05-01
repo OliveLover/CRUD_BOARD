@@ -4,6 +4,7 @@ import com.example.crud.dto.*;
 import com.example.crud.entity.RefreshToken;
 import com.example.crud.entity.User;
 import com.example.crud.jwt.JwtUtil;
+import com.example.crud.repository.PostRepository;
 import com.example.crud.repository.RefreshTokenRepository;
 import com.example.crud.repository.UserRepository;
 import com.example.crud.security.UserDetailsImpl;
@@ -22,7 +23,7 @@ public class UserService {
     private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
     private  final JwtUtil jwtUtil;
 
-    private final PasswordEncoder passwordEncoder;
+    private  final PasswordEncoder passwordEncoder;
 
     private final RefreshTokenRepository refreshTokenRepository;
 
@@ -117,12 +118,15 @@ public class UserService {
     }
 
     @Transactional
-    public ResponseDto<?> signOut(LoginRequestDto loginRequestDto, User user) {
+    public ResponseDto<?> signOut(LoginRequestDto loginRequestDto, User user, HttpServletResponse httpServletResponse) {
         String password = loginRequestDto.getPassword();
-
         if(!passwordEncoder.matches(password, user.getPassword())) {
             return ResponseDto.set(false, 401, "비밀번호가 일치하지 않습니다.");
         } else {
+            //토큰 추가
+            TokenDto tokenDto = new TokenDto("") ;
+            setLogOutHeader(httpServletResponse, tokenDto);
+            refreshTokenRepository.deleteByUsername(user.getName());
             userRepository.deleteById(user.getId());
             return ResponseDto.setSuccess("회원 탈퇴가 완료되었습니다.");
         }

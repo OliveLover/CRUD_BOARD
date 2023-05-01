@@ -34,7 +34,10 @@ public class Post extends Timestamped {
     @ColumnDefault("0")
     private long likesNum;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<PostLikes> postLikesList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     @OrderBy("createdAt DESC")
     private List<Comment> commentList = new ArrayList<>();
 
