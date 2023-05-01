@@ -107,6 +107,9 @@ public class UserService {
     public ResponseDto<?> logout(User user, HttpServletResponse httpServletResponse) {
         Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUsername(user.getName());
         if(refreshToken.isPresent()) {
+            //토큰 추가
+            TokenDto tokenDto = new TokenDto("") ;
+            setLogOutHeader(httpServletResponse, tokenDto);
             refreshTokenRepository.deleteByUsername(user.getName());
             return ResponseDto.setSuccess("로그아웃 되었습니다.");
         }
@@ -128,6 +131,15 @@ public class UserService {
     public void setHeader(HttpServletResponse httpServletResponse, TokenDto tokenDto) {
         httpServletResponse.addHeader(JwtUtil.ACCESS_TOKEN, tokenDto.getAccessToken());
         httpServletResponse.addHeader(JwtUtil.REFRESH_TOKEN, tokenDto.getRefreshToken());
+    }
+
+    /**
+     * 로그아웃
+     * @param httpServletResponse
+     * @param tokenDto
+     */
+    public void setLogOutHeader(HttpServletResponse httpServletResponse, TokenDto tokenDto) {
+        httpServletResponse.addHeader(JwtUtil.ACCESS_TOKEN, tokenDto.getAccessToken());
     }
 
 

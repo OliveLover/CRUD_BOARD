@@ -14,4 +14,11 @@ public class TokenDto {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
+
+    /**
+     * 로그아웃 토큰
+     */
+    public TokenDto(String logoutToken) {
+        this.accessToken = "";
+    }
 }
