@@ -31,6 +31,7 @@ public class UserService {
     public ResponseDto<?> signUp(SignUpRequestDto signUpRequestDto) {
         String name = signUpRequestDto.getName();
         String password = signUpRequestDto.getPassword();
+        String email = signUpRequestDto.getEmail();
         String adminToken = signUpRequestDto.getAdminToken();
 
         String namePattern = "^[0-9a-z]{4,10}$";
@@ -41,6 +42,11 @@ public class UserService {
         String passwordPattern = "^[a-zA-Z0-9`~!@#$%^&*()\\-_=+\\\\|\\[\\]{};:\'\",.<>/?]{0,9}$";
         if (!password.matches(passwordPattern)) {
             return ResponseDto.set(false, 406, "올바르지 않은 비밀번호 형식 입니다.");
+        }
+
+        String emailPatter = "[0-9a-zA-Z]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
+        if(!email.matches(emailPatter)) {
+            return ResponseDto.set(false, 406, "올바르지 않은 email 형식 입니다.");
         }
 
         //관리자 토큰의 존재 유무 확인
