@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter                                                                                                            //getter 자동 생성
@@ -40,8 +41,17 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRole userRole;
 
-    @OneToMany(mappedBy= "user", cascade = CascadeType.ALL)
-    private List<Post> post;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Post> post = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Comment> comment = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<PostLikes> postLike = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<CommentLikes> commentLike = new ArrayList<>();
 
 
     public User(SignUpRequestDto signUpRequestDto, String encode, UserRole userRole) {

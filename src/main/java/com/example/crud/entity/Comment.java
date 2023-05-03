@@ -1,7 +1,6 @@
 package com.example.crud.entity;
 
 import com.example.crud.dto.CommentRequestDto;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,11 +29,11 @@ public class Comment extends Timestamped {
     @ColumnDefault("0")
     private long likesNum;
 
-    @JsonIgnore
+    ///@JsonIgnore
     @ManyToOne
     private User user;
 
-    @JsonIgnore
+    //@JsonIgnore
     @ManyToOne
     private Post post;
 
