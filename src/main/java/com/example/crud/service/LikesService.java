@@ -43,7 +43,7 @@ public class LikesService {
             postLikesRepository.save(postLikes);
         }
 
-        long likes = postLikesRepository.countByPostId(postId);
+        long likes = postLikesRepository.countByUserIdAndPostId(user.getId(), postId);
         post.checkLikes(likes);
         return ResponseDto.setSuccess(likes);
     }
