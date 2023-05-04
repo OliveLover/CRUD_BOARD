@@ -1,6 +1,7 @@
 package com.example.crud.entity;
 
 import com.example.crud.dto.PostRequestDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,9 +35,11 @@ public class Post extends Timestamped {
     @ColumnDefault("0")
     private long likesNum;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<PostLikes> postLikesList = new ArrayList<>();
 
+//    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+//    private List<PostLikes> postLikesList = new ArrayList<>();
+
+    @JsonIgnore
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     @OrderBy("createdAt DESC")
     private List<Comment> commentList = new ArrayList<>();

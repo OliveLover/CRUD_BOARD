@@ -59,7 +59,8 @@ public class JwtUtil {
         String token = tokenType.equals("Access_Token") ? ACCESS_TOKEN : REFRESH_TOKEN;
         String bearerToken = request.getHeader(token);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
-            return bearerToken.substring(7);
+            //return bearerToken.substring(7);
+            return bearerToken.split(" ")[1].trim();
         }
         return null;
     }
@@ -104,7 +105,8 @@ public class JwtUtil {
         //DB에 저장한 토큰 비교
         Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUsername(getUserInfoFromToken(token));
 
-        return refreshToken.isPresent() && token.equals(refreshToken.get().getRefreshToken().substring(7));
+        //return refreshToken.isPresent() && token.equals(refreshToken.get().getRefreshToken().substring(7));
+        return refreshToken.isPresent() && token.equals(refreshToken.get().getRefreshToken().split(" ")[1].trim());
     }
 
     // 토큰에서 사용자 정보 가져오기

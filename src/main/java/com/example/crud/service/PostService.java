@@ -18,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor                                                                               //생성자를 자동생성하여 자동주입
 public class PostService {
-
-    private final UserRepository userRepository;
     private final PostRepository postRepository;
 
 
@@ -39,8 +37,6 @@ public class PostService {
 
     @Transactional
     public ResponseDto<?> createPost(PostRequestDto postRequestDto, User user) {
-        //System.out.println("유저 아이디 : " + userDetails.getUser().getId());
-        //userCheck(userDetails);
         Post post = new Post(postRequestDto, user);
         postRepository.save(post);
         return ResponseDto.setSuccess("게시글 저장이 완료되었습니다.");

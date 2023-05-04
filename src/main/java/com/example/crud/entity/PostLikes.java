@@ -1,5 +1,6 @@
 package com.example.crud.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,10 +15,12 @@ public class PostLikes {
     @Column
     private Long id;
 
+ //   @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+//    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;

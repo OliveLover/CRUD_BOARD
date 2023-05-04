@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -71,10 +72,12 @@ public class WebSecurityConfig {
         http.csrf().disable();
 
         http.authorizeRequests()
-               // .requestMatchers("/api/post/**").authenticated()
-                .requestMatchers("/api/comment/**").authenticated()
-                .requestMatchers("/api/like/**").authenticated()
-                .anyRequest().permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/post/**").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/posts").permitAll()
+                .requestMatchers("/api/auth/signup").permitAll()
+                .requestMatchers("/api/auth/login").permitAll()
+                .requestMatchers(PERMIT_URL_ARRAY).permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 

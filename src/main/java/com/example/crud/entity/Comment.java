@@ -37,8 +37,8 @@ public class Comment extends Timestamped {
     @ManyToOne
     private Post post;
 
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
-    private List<CommentLikes> commentLikesList = new ArrayList<>();
+//    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+//    private List<CommentLikes> commentLikesList = new ArrayList<>();
 
     public Comment (CommentRequestDto commentRequestDto, User user, Post post) {
         this.text = commentRequestDto.getText();
