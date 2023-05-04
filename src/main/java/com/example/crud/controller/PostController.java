@@ -2,6 +2,8 @@ package com.example.crud.controller;
 
 import com.example.crud.dto.PostRequestDto;
 import com.example.crud.dto.ResponseDto;
+import com.example.crud.exception.CustomException;
+import com.example.crud.exception.ErrorCode;
 import com.example.crud.security.UserDetailsImpl;
 import com.example.crud.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,7 +12,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 @RequiredArgsConstructor
 @RestController
@@ -33,9 +37,13 @@ public class PostController {
     private final PostService postService;
 
     @Operation(summary = "게시글 생성 API", description = "게시글을 생성")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "게시글 저장 완료")})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "게시글 저장 완료"),
+    @ApiResponse(responseCode = "403", description = "로그인이 필요 합니다.")})
     @PostMapping("post")
     public ResponseDto<?> createPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if(userDetails == null) {
+            throw new CustomException(ErrorCode.NEED_TO_LOGIN);
+        }
         return postService.createPost(postRequestDto, userDetails.getUser());
     }
 

@@ -32,6 +32,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
     private final JwtUtil jwtUtil;
+    //private HandlerExceptionResolver resolver;
 
     private static final String[] PERMIT_URL_ARRAY = {
             /* swagger v2 */
@@ -67,12 +68,15 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers(PERMIT_URL_ARRAY).permitAll()
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/posts").permitAll()
-                .anyRequest().authenticated().and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        http.csrf().disable();
+
+        http.authorizeRequests()
+               // .requestMatchers("/api/post/**").authenticated()
+                .requestMatchers("/api/comment/**").authenticated()
+                .requestMatchers("/api/like/**").authenticated()
+                .anyRequest().permitAll()
+                .and()
+                .addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         /*
         기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한설정

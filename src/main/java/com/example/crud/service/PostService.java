@@ -6,6 +6,7 @@ import com.example.crud.dto.UserRole;
 import com.example.crud.entity.Post;
 import com.example.crud.entity.User;
 import com.example.crud.repository.PostRepository;
+import com.example.crud.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor                                                                               //생성자를 자동생성하여 자동주입
 public class PostService {
+
+    private final UserRepository userRepository;
     private final PostRepository postRepository;
+
 
     /*
     @Transactional
@@ -35,6 +39,8 @@ public class PostService {
 
     @Transactional
     public ResponseDto<?> createPost(PostRequestDto postRequestDto, User user) {
+        //System.out.println("유저 아이디 : " + userDetails.getUser().getId());
+        //userCheck(userDetails);
         Post post = new Post(postRequestDto, user);
         postRepository.save(post);
         return ResponseDto.setSuccess("게시글 저장이 완료되었습니다.");
@@ -94,7 +100,6 @@ public class PostService {
             return ResponseDto.set(false, 403, "잘못된 요청입니다.");
         }
     }
-
     public Post postCheck(Long postId) {
         return postRepository.findById(postId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 게시물 입니다.")
