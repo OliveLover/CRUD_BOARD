@@ -63,7 +63,7 @@ public class LikesService {
             commentLikesRepository.save(commentLikes);
         }
 
-        long likes = commentLikesRepository.countByCommentId(commentId);
+        long likes = commentLikesRepository.countByUserIdAndCommentId(user.getId(), commentId);
 
         comment.checkLikes(likes);
 
